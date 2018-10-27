@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Build a Blog!</h1>
+<form method='post'>
+    <label>
+        <h3>Brand of yarn:</h3><br>
+        <input type="text" name='name' value='{{new_yarn_brand}}' />
+    </label>
+    <p class='error'>{{yarn_infoerror}}</p>
+    <br>
+    <label>
+    <h3>Details about yarn:</h3>
+    <p><h4>In this section include anything specific about your yarn such as added materials, hand-dyed qualities, texture-indicators, etc</h4></p>
+    <div>
+        <textarea name='details'>{{yarn_detail_post}}</textarea>
+        <p class='error'>{{content_error}}</p>
+    </div>
+    </label>
+    <label>
+        <h3>Weight of yarn:</h3><br>
+        <input type="text" name='weight' value='{{new_yarn_weight}}' />
+    </label>
+    <p class='error'>{{yarn_infoerror}}</p>
+    <!--do the errors have to be different with each instance or can i reuse the error for certain blanks?-->
+    <br>
+    <label>
+    <div>
+    <input type="submit" value='Add Post' />
+    </div>
+</form>
