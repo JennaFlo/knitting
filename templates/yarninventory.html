@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %} 
+{% if single_post == False %}
+<h1>Create and Store your blogs!</h1>
+<!--this is where the yarns are displayed like the blogs were in the pain.py-->
+    
+<hr />
+
+    {% if blogs|length == 0 %}
+    <p>You havent posted anything yet!</p>
+    {% else %}
+
+        <ul>
+            {% for blog in blogs %}
+            
+                <a href='/blogs?id={{blog.id}}'><h3>{{blog.name}}</h3></a>
+                <h4><p>{{blog.blog}}</p></h4>
+                <p>Posted by:<a href="/blogs?member={{blog.user.id}}">{{blog.user.username}}</a></p>
+                  
+                
+            
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% else %}
+<h1>{{blogs.name}}</h1>
+<p>{{blogs.blog}}</p>
+{% endif %}
+
+{% endblock %}

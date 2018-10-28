@@ -1,4 +1,5 @@
-from flask import Flask, request, render_template, url_for, redirect
+from flask import Flask, request, render_template, url_for, redirect, sessions
+from flask_sqlalchemy import SQLAlchemy
 import re
 app = Flask(__name__)
 
@@ -14,7 +15,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(120))
     password = db.Column(db.String(120))
-    blogs = db.relationship('Blog', backref='user')
+    yarns = db.relationship('Yarn', backref='user')
+    #i need to connect these all to the backref- what is the process for this if i want to 
+    #connect more than one table?
 
     def __init__(self, username, password):
         self.username = username
@@ -27,6 +30,7 @@ class Yarn(db.Model):
     yarn_weight= db.Column(db.String(200))
     yarn_length= db.Column(db.String(200))
     yarn_color= db.Column(db.String(600))
+    yarns = db.relationship('Yarn', backref='user')
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, yarn_brand, yarn_details,yarn_weight, yarn_length, yarn_color, yarn_skeins, user):
@@ -36,6 +40,18 @@ class Yarn(db.Model):
         self.yarn_length = yarn_length
         self.yarn_color = yarn_color
         self.yarn_skeins = yarn_skeins
+        self.user = user
+
+class Patterns(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    pattern_name = db.Column(db.String(1200))
+    pattern_directions = db.Column(db.String(12000000))
+    yarns = db.relationship('Yarn', backref='user')
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+
+    def __init__(self, pattern_name, user):
+        self.pattern_name = pattern_name
         self.user = user
 
 @app.before_request
@@ -174,12 +190,12 @@ def yarn_details():
         return render_template("yarn_info.html", title="Add a purchased yarn")
 
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
-    session['preload'] = "preload"
-    members = User.query.all()
-    return render_template('index.html', members=members)
-    del session['preload']
+#@app.route('/', methods=['GET', 'POST'])
+#def index():
+    #session['preload'] = "preload"
+    #members = User.query.all()
+    #return render_template('index.html', members=members)
+    #del session['preload']
 
 @app.route('/logout')
 def logout():
@@ -189,4 +205,4 @@ def logout():
 
 
 if __name__ == '__main__':
-app.run()
+    app.run()
